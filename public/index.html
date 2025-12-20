@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
-    /* 🌌 Fullscreen Galaxy Background */
+    /* 🌌 Fullscreen galaxy background */
     body {
       margin: 0;
       height: 100vh;
@@ -17,45 +17,31 @@
       font-family: 'Arial', sans-serif;
       color: white;
       position: relative;
-      background: #000; /* solid black to remove white edges */
+      background: #000; /* pure black to remove white edges */
     }
 
-    /* 🌠 Twinkling stars layer */
+    /* 🌠 Moving stars layer */
     .stars {
       position: absolute;
       inset: 0;
-      background-image:
-        radial-gradient(1px 1px at 10% 20%, #fff, transparent),
-        radial-gradient(1px 1px at 50% 40%, #fff, transparent),
-        radial-gradient(2px 2px at 80% 70%, #fff, transparent),
-        radial-gradient(1px 1px at 30% 90%, #fff, transparent),
-        radial-gradient(1px 1px at 70% 10%, #fff, transparent);
-      background-repeat: repeat;
+      background: transparent;
       z-index: 0;
-      opacity: 0.8;
-      animation: twinkle 6s infinite alternate;
+      overflow: hidden;
     }
 
-    @keyframes twinkle {
-      0% { opacity: 0.4; }
-      50% { opacity: 0.7; }
-      100% { opacity: 1; }
-    }
-
-    /* ☁️ Nebula clouds layer */
-    .nebula {
+    .star {
       position: absolute;
-      inset: 0;
-      background: url('https://i.imgur.com/6b8k5rA.png') repeat; /* sample nebula texture */
-      background-size: cover;
-      opacity: 0.3;
-      z-index: 0;
-      animation: moveNebula 60s linear infinite;
+      width: 2px;
+      height: 2px;
+      background: white;
+      border-radius: 50%;
+      opacity: 0.8;
+      animation: moveStars linear infinite;
     }
 
-    @keyframes moveNebula {
-      0% { transform: translateX(0) translateY(0); }
-      100% { transform: translateX(-100px) translateY(-50px); }
+    @keyframes moveStars {
+      from { transform: translateY(0); }
+      to { transform: translateY(-100vh); }
     }
 
     /* 🪐 Container Card */
@@ -112,11 +98,8 @@
 </head>
 
 <body>
-  <!-- Nebula and Stars layers -->
-  <div class="nebula"></div>
-  <div class="stars"></div>
+  <div class="stars" id="stars"></div>
 
-  <!-- 🪐 UI Container -->
   <div class="container">
     <h1>🌌 Tuya Switch</h1>
     <button id="toggleBtn">Turn ON</button>
@@ -124,6 +107,20 @@
   </div>
 
   <script>
+    // 🔹 Generate moving stars
+    const starsContainer = document.getElementById('stars');
+    const numStars = 100;
+    for (let i = 0; i < numStars; i++) {
+      const star = document.createElement('div');
+      star.classList.add('star');
+      star.style.top = Math.random() * window.innerHeight + 'px';
+      star.style.left = Math.random() * window.innerWidth + 'px';
+      star.style.width = star.style.height = Math.random() * 2 + 1 + 'px';
+      star.style.animationDuration = 10 + Math.random() * 20 + 's';
+      starsContainer.appendChild(star);
+    }
+
+    // 🔒 Toggle logic
     let isOn = false;
     const btn = document.getElementById('toggleBtn');
     const status = document.getElementById('status');
