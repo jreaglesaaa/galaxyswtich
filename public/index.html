@@ -10,19 +10,18 @@
     body {
       margin: 0;
       height: 100vh;
+      overflow: hidden;
       display: flex;
       justify-content: center;
       align-items: center;
-      background: radial-gradient(circle at top, #0a001f, #000);
-      color: white;
       font-family: 'Arial', sans-serif;
-      overflow: hidden;
+      color: white;
       position: relative;
+      background: #000; /* solid black to remove white edges */
     }
 
-    /* ✨ Animated Stars */
-    body::before {
-      content: '';
+    /* 🌠 Twinkling stars layer */
+    .stars {
       position: absolute;
       inset: 0;
       background-image:
@@ -31,9 +30,10 @@
         radial-gradient(2px 2px at 80% 70%, #fff, transparent),
         radial-gradient(1px 1px at 30% 90%, #fff, transparent),
         radial-gradient(1px 1px at 70% 10%, #fff, transparent);
+      background-repeat: repeat;
+      z-index: 0;
       opacity: 0.8;
       animation: twinkle 6s infinite alternate;
-      z-index: 0;
     }
 
     @keyframes twinkle {
@@ -42,14 +42,30 @@
       100% { opacity: 1; }
     }
 
-    /* 🪐 Card */
+    /* ☁️ Nebula clouds layer */
+    .nebula {
+      position: absolute;
+      inset: 0;
+      background: url('https://i.imgur.com/6b8k5rA.png') repeat; /* sample nebula texture */
+      background-size: cover;
+      opacity: 0.3;
+      z-index: 0;
+      animation: moveNebula 60s linear infinite;
+    }
+
+    @keyframes moveNebula {
+      0% { transform: translateX(0) translateY(0); }
+      100% { transform: translateX(-100px) translateY(-50px); }
+    }
+
+    /* 🪐 Container Card */
     .container {
       position: relative;
       z-index: 1;
-      background: rgba(20, 0, 40, 0.6); /* transparent, no white border */
+      background: rgba(20, 0, 40, 0.6);
       padding: 40px 30px;
       border-radius: 25px;
-      box-shadow: 0 0 30px rgba(127, 0, 255, 0.5); /* soft purple glow */
+      box-shadow: 0 0 30px rgba(127, 0, 255, 0.5);
       width: 90%;
       max-width: 400px;
       text-align: center;
@@ -61,7 +77,6 @@
       font-size: 1.8rem;
     }
 
-    /* 🔘 Toggle Button */
     button {
       padding: 18px 50px;
       font-size: 1.4rem;
@@ -70,7 +85,7 @@
       border-radius: 50px;
       background: linear-gradient(90deg, #7f00ff, #00c6ff);
       color: white;
-      box-shadow: 0 0 20px rgba(127, 0, 255, 0.5); /* softer glow */
+      box-shadow: 0 0 20px rgba(127, 0, 255, 0.5);
       transition: transform 0.2s, box-shadow 0.2s;
       width: 100%;
       max-width: 250px;
@@ -78,10 +93,9 @@
 
     button:hover {
       transform: scale(1.05);
-      box-shadow: 0 0 30px rgba(0, 198, 255, 0.6); /* hover glow */
+      box-shadow: 0 0 30px rgba(0, 198, 255, 0.6);
     }
 
-    /* 📜 Status Text */
     #status {
       margin-top: 20px;
       font-weight: bold;
@@ -89,30 +103,26 @@
       opacity: 0.9;
     }
 
-    /* 📱 Mobile adjustments */
     @media (max-width: 480px) {
-      .container {
-        padding: 30px 20px;
-      }
-      h1 {
-        font-size: 1.5rem;
-      }
-      button {
-        font-size: 1.2rem;
-        padding: 15px 40px;
-      }
+      .container { padding: 30px 20px; }
+      h1 { font-size: 1.5rem; }
+      button { font-size: 1.2rem; padding: 15px 40px; }
     }
   </style>
 </head>
 
 <body>
+  <!-- Nebula and Stars layers -->
+  <div class="nebula"></div>
+  <div class="stars"></div>
+
+  <!-- 🪐 UI Container -->
   <div class="container">
     <h1>🌌 Tuya Switch</h1>
     <button id="toggleBtn">Turn ON</button>
     <div id="status"></div>
   </div>
 
-  <!-- 🔒 Toggle Logic -->
   <script>
     let isOn = false;
     const btn = document.getElementById('toggleBtn');
