@@ -2,81 +2,105 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Tuya Switch</title>
+  <title>Tuya Switch 🌌</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
-    /* 🌌 Galaxy background */
+    /* 🌌 Fullscreen Galaxy Background */
     body {
-      font-family: Arial, sans-serif;
-      text-align: center;
+      font-family: 'Arial', sans-serif;
       margin: 0;
       height: 100vh;
       display: flex;
-      align-items: center;
       justify-content: center;
-      background: radial-gradient(circle at top, #1a0033, #000);
+      align-items: center;
+      background: radial-gradient(circle at top, #0a001f, #000);
       color: white;
       overflow: hidden;
+      position: relative;
     }
 
-    /* ✨ Stars */
+    /* ✨ Animated stars */
     body::before {
-      content: "";
+      content: '';
       position: absolute;
       inset: 0;
       background-image:
-        radial-gradient(1px 1px at 20% 30%, white, transparent),
-        radial-gradient(1px 1px at 70% 40%, white, transparent),
-        radial-gradient(2px 2px at 40% 80%, white, transparent),
-        radial-gradient(1px 1px at 90% 10%, white, transparent);
+        radial-gradient(1px 1px at 10% 20%, #fff, transparent),
+        radial-gradient(1px 1px at 50% 40%, #fff, transparent),
+        radial-gradient(2px 2px at 80% 70%, #fff, transparent),
+        radial-gradient(1px 1px at 30% 90%, #fff, transparent),
+        radial-gradient(1px 1px at 70% 10%, #fff, transparent);
       opacity: 0.8;
       animation: twinkle 6s infinite alternate;
+      z-index: 0;
     }
 
     @keyframes twinkle {
-      from { opacity: 0.4; }
-      to { opacity: 1; }
+      0% { opacity: 0.4; }
+      50% { opacity: 0.8; }
+      100% { opacity: 1; }
     }
 
     /* 🪐 Card */
     .container {
       position: relative;
       z-index: 1;
-      background: rgba(20, 0, 40, 0.75);
-      padding: 50px;
-      border-radius: 20px;
-      box-shadow: 0 0 40px #7f00ff;
-      width: 320px;
+      background: rgba(20, 0, 40, 0.85);
+      padding: 40px 30px;
+      border-radius: 25px;
+      box-shadow: 0 0 50px #7f00ff;
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
     }
 
     h1 {
       margin-bottom: 30px;
       letter-spacing: 2px;
+      font-size: 1.8rem;
     }
 
-    /* 🔘 Button */
+    /* 🔘 Toggle Button */
     button {
-      padding: 20px 40px;
-      font-size: 24px;
+      padding: 18px 50px;
+      font-size: 1.4rem;
       cursor: pointer;
       border: none;
       border-radius: 50px;
       background: linear-gradient(90deg, #7f00ff, #00c6ff);
       color: white;
-      box-shadow: 0 0 20px #7f00ff;
+      box-shadow: 0 0 25px #7f00ff;
       transition: transform 0.2s, box-shadow 0.2s;
+      width: 100%;
+      max-width: 250px;
     }
 
     button:hover {
       transform: scale(1.05);
-      box-shadow: 0 0 30px #00c6ff;
+      box-shadow: 0 0 35px #00c6ff;
     }
 
-    /* 📜 Status */
+    /* 📜 Status Text */
     #status {
       margin-top: 20px;
       font-weight: bold;
+      font-size: 1.1rem;
       opacity: 0.9;
+    }
+
+    /* 📱 Mobile adjustments */
+    @media (max-width: 480px) {
+      .container {
+        padding: 30px 20px;
+      }
+      h1 {
+        font-size: 1.5rem;
+      }
+      button {
+        font-size: 1.2rem;
+        padding: 15px 40px;
+      }
     }
   </style>
 </head>
@@ -88,10 +112,8 @@
     <div id="status"></div>
   </div>
 
-  <!-- 🔒 LOGIC UNCHANGED -->
   <script>
     let isOn = false;
-
     const btn = document.getElementById('toggleBtn');
     const status = document.getElementById('status');
 
