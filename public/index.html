@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Tuya Switch 🌌</title>
+  <title>Galaxy Switch 🌌</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
@@ -17,7 +17,7 @@
       font-family: 'Arial', sans-serif;
       color: white;
       position: relative;
-      background: #000; /* pure black to remove white edges */
+      background: #000;
     }
 
     /* 🌠 Moving stars layer */
@@ -58,9 +58,20 @@
     }
 
     h1 {
-      margin-bottom: 30px;
+      margin-bottom: 25px;
       letter-spacing: 2px;
       font-size: 1.8rem;
+    }
+
+    input {
+      padding: 12px;
+      width: 100%;
+      max-width: 250px;
+      margin-bottom: 15px;
+      border-radius: 25px;
+      border: none;
+      text-align: center;
+      font-size: 1.1rem;
     }
 
     button {
@@ -75,9 +86,14 @@
       transition: transform 0.2s, box-shadow 0.2s;
       width: 100%;
       max-width: 250px;
+      opacity: 0.5;
     }
 
-    button:hover {
+    button.enabled {
+      opacity: 1;
+    }
+
+    button:hover.enabled {
       transform: scale(1.05);
       box-shadow: 0 0 30px rgba(0, 198, 255, 0.6);
     }
@@ -88,12 +104,6 @@
       font-size: 1.1rem;
       opacity: 0.9;
     }
-
-    @media (max-width: 480px) {
-      .container { padding: 30px 20px; }
-      h1 { font-size: 1.5rem; }
-      button { font-size: 1.2rem; padding: 15px 40px; }
-    }
   </style>
 </head>
 
@@ -101,9 +111,13 @@
   <div class="stars" id="stars"></div>
 
   <div class="container">
-    <h1>🌌 Tuya Switch</h1>
-    <button id="toggleBtn">Turn ON</button>
-    <div id="status"></div>
+    <h1>🌌 Galaxy Switch</h1>
+
+    <!-- 🔐 Passcode Input -->
+    <input type="password" id="passcode" placeholder="Enter Passcode">
+
+    <button id="toggleBtn" disabled>Turn ON</button>
+    <div id="status">🔒 Locked</div>
   </div>
 
   <script>
@@ -120,10 +134,26 @@
       starsContainer.appendChild(star);
     }
 
-    // 🔒 Toggle logic
-    let isOn = false;
+    // 🔐 Passcode Logic
+    const PASSCODE = "6767";
+    const passInput = document.getElementById('passcode');
     const btn = document.getElementById('toggleBtn');
     const status = document.getElementById('status');
+
+    passInput.addEventListener('input', () => {
+      if (passInput.value === PASSCODE) {
+        btn.disabled = false;
+        btn.classList.add('enabled');
+        status.textContent = '🔓 Unlocked';
+      } else {
+        btn.disabled = true;
+        btn.classList.remove('enabled');
+        status.textContent = '🔒 Locked';
+      }
+    });
+
+    // 🔒 Toggle logic
+    let isOn = false;
 
     btn.addEventListener('click', () => {
       const newState = !isOn;
