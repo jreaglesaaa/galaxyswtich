@@ -3,36 +3,42 @@
 <head>
   <meta charset="UTF-8" />
   <title>Milky Way Control</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- ✅ Fix mobile white bars -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
   <style>
-    * {
-      box-sizing: border-box;
-      font-family: "Segoe UI", system-ui, sans-serif;
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      overscroll-behavior: none;
     }
 
     body {
-      margin: 0;
-      height: 100vh;
-      background: radial-gradient(circle at top, #1b0033, #000);
+      min-height: 100svh;
       display: flex;
       justify-content: center;
       align-items: center;
+      font-family: system-ui, -apple-system, sans-serif;
       color: white;
+      background: radial-gradient(circle at top, #250045, #000);
     }
 
     .panel {
-      width: 340px;
-      background: rgba(15, 10, 30, 0.9);
-      border-radius: 20px;
+      width: 92%;
+      max-width: 360px;
       padding: 30px;
-      box-shadow: 0 0 40px rgba(120, 0, 255, 0.6);
+      border-radius: 22px;
+      background: rgba(15, 5, 30, 0.95);
+      box-shadow: 0 0 45px rgba(120, 0, 255, 0.7);
       text-align: center;
     }
 
-    .panel h1 {
-      margin: 0 0 10px;
-      font-size: 1.6rem;
+    h1 {
+      margin: 0;
       letter-spacing: 1px;
     }
 
@@ -42,149 +48,130 @@
       margin-bottom: 25px;
     }
 
-    .lock {
-      font-size: 3rem;
-      margin-bottom: 15px;
-    }
-
     input {
       width: 100%;
       padding: 14px;
-      border-radius: 12px;
+      font-size: 1.1rem;
+      border-radius: 14px;
       border: none;
       outline: none;
       text-align: center;
-      font-size: 1.1rem;
-      margin-bottom: 20px;
+      margin-bottom: 25px;
     }
 
-    .switch-card {
-      background: linear-gradient(135deg, #2b0055, #120020);
-      border-radius: 16px;
+    /* 🔘 TOGGLE SWITCH */
+    .toggle-wrapper {
+      background: linear-gradient(135deg, #2c0057, #120020);
       padding: 25px;
-      margin-bottom: 20px;
-      box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.05);
+      border-radius: 18px;
+      box-shadow: inset 0 0 15px rgba(255,255,255,0.05);
     }
 
-    .switch-name {
+    .toggle-title {
       font-size: 1.3rem;
-      margin-bottom: 10px;
+      margin-bottom: 15px;
     }
 
-    .switch-status {
-      font-size: 0.95rem;
-      opacity: 0.7;
-      margin-bottom: 20px;
-    }
-
-    button {
-      width: 100%;
-      padding: 16px;
+    .toggle {
+      position: relative;
+      width: 90px;
+      height: 44px;
+      margin: 0 auto 15px;
+      background: #333;
       border-radius: 50px;
-      border: none;
-      font-size: 1.1rem;
       cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .toggle::before {
+      content: "";
+      position: absolute;
+      width: 36px;
+      height: 36px;
+      background: white;
+      border-radius: 50%;
+      top: 4px;
+      left: 4px;
+      transition: transform 0.3s;
+    }
+
+    .toggle.on {
       background: linear-gradient(90deg, #7f00ff, #00d4ff);
-      color: white;
-      opacity: 0.4;
-      transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+      box-shadow: 0 0 20px rgba(0,200,255,0.8);
     }
 
-    button.enabled {
-      opacity: 1;
-      box-shadow: 0 0 25px rgba(0, 200, 255, 0.6);
+    .toggle.on::before {
+      transform: translateX(46px);
     }
 
-    button.enabled:hover {
-      transform: scale(1.05);
-    }
-
-    .footer-status {
-      margin-top: 10px;
+    .status {
       font-size: 0.95rem;
       opacity: 0.85;
+    }
+
+    .footer {
+      margin-top: 15px;
+      font-size: 0.9rem;
+      opacity: 0.8;
     }
   </style>
 </head>
 
 <body>
   <div class="panel">
-    <div class="lock" id="lockIcon">🔒</div>
-    <h1>Milky Way</h1>
-    <div class="subtitle">Dual Power Control</div>
+    <h1>🌌 Milky Way</h1>
+    <div class="subtitle">Dual Switch Control</div>
 
-    <input
-      type="password"
-      id="passcode"
-      placeholder="Enter Access Code"
-    />
+    <input type="password" id="passcode" placeholder="Enter Access Code">
 
-    <div class="switch-card">
-      <div class="switch-name">🌌 Milky Way</div>
-      <div class="switch-status" id="switchStatus">
-        Status: OFF
-      </div>
-
-      <button id="milkyWayBtn" disabled>
-        Activate
-      </button>
+    <div class="toggle-wrapper">
+      <div class="toggle-title">Milky Way</div>
+      <div class="toggle" id="toggle"></div>
+      <div class="status" id="toggleStatus">OFF</div>
     </div>
 
-    <div class="footer-status" id="statusText">
-      System Locked
-    </div>
+    <div class="footer" id="systemStatus">🔒 Locked</div>
   </div>
 
   <script>
     const PASSCODE = "6767";
 
     const passInput = document.getElementById("passcode");
-    const btn = document.getElementById("milkyWayBtn");
-    const statusText = document.getElementById("statusText");
-    const switchStatus = document.getElementById("switchStatus");
-    const lockIcon = document.getElementById("lockIcon");
+    const toggle = document.getElementById("toggle");
+    const toggleStatus = document.getElementById("toggleStatus");
+    const systemStatus = document.getElementById("systemStatus");
 
-    let switch1On = false;
-    let switch2On = false;
+    let unlocked = false;
+    let milkyWayOn = false;
 
     passInput.addEventListener("input", () => {
-      const unlocked = passInput.value === PASSCODE;
-
-      btn.disabled = !unlocked;
-      btn.classList.toggle("enabled", unlocked);
-
-      lockIcon.textContent = unlocked ? "🔓" : "🔒";
-      statusText.textContent = unlocked
-        ? "Access Granted"
-        : "System Locked";
+      unlocked = passInput.value === PASSCODE;
+      systemStatus.textContent = unlocked ? "🔓 Unlocked" : "🔒 Locked";
     });
 
-    function activateMilkyWay() {
+    toggle.addEventListener("click", () => {
+      if (!unlocked) return;
+
+      milkyWayOn = !milkyWayOn;
+      toggle.classList.toggle("on", milkyWayOn);
+      toggleStatus.textContent = milkyWayOn ? "ON ✨" : "OFF 🌑";
+
+      // 🔁 Toggle BOTH switches
       Promise.all([
         fetch("/toggle", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ switch: 1, state: true })
+          body: JSON.stringify({ switch: 1, state: milkyWayOn })
         }),
         fetch("/toggle", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ switch: 2, state: true })
+          body: JSON.stringify({ switch: 2, state: milkyWayOn })
         })
-      ])
-        .then(() => {
-          switch1On = true;
-          switch2On = true;
-          switchStatus.textContent = "Status: ON ✨";
-          btn.textContent = "Active";
-          statusText.textContent = "Milky Way Online";
-        })
-        .catch(() => {
-          statusText.textContent = "⚠️ Activation Failed";
-        });
-    }
-
-    btn.addEventListener("click", activateMilkyWay);
+      ]).catch(() => {
+        systemStatus.textContent = "⚠️ Request Failed";
+      });
+    });
   </script>
 </body>
 </html>
